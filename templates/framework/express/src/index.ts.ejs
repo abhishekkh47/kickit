@@ -1,0 +1,34 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+<% if (architecture === 'class') { %>
+import { AppRouter } from './routes';
+<% } else { %>
+import routes from './routes';
+<% } %>
+
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
+
+// Basic health check
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+<% if (architecture === 'class') { %>
+// Initialize routes
+const router = new AppRouter();
+app.use('/api', router.getRouter());
+<% } else { %>
+// Initialize routes
+app.use('/api', routes);
+<% } %>
+
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});

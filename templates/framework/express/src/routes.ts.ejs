@@ -1,0 +1,30 @@
+import { Router } from 'express';
+
+<% if (architecture === 'class') { %>
+export class AppRouter {
+  private router: Router;
+
+  constructor() {
+    this.router = Router();
+    this.initializeRoutes();
+  }
+
+  private initializeRoutes() {
+    this.router.get('/ping', (req, res) => {
+      res.json({ message: 'pong' });
+    });
+  }
+
+  public getRouter(): Router {
+    return this.router;
+  }
+}
+<% } else { %>
+const router = Router();
+
+router.get('/ping', (req, res) => {
+  res.json({ message: 'pong' });
+});
+
+export default router;
+<% } %>
