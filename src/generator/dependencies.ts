@@ -33,14 +33,24 @@ export function getDependencies(config: ProjectConfig) {
 
   if (config.database === 'postgres') {
     dependencies['pg'] = '^8.11.3';
+    dependencies['pg-hstore'] = '^2.3.4';
     if (config.language === 'typescript') {
       devDependencies['@types/pg'] = '^8.10.2';
     }
+  } else if (config.database === 'mysql') {
+    dependencies['mysql2'] = '^3.6.0';
   }
 
   if (config.orm === 'prisma') {
     dependencies['@prisma/client'] = '^5.2.0';
     devDependencies['prisma'] = '^5.2.0';
+  } else if (config.orm === 'mongoose') {
+    dependencies['mongoose'] = '^7.5.0';
+    if (config.language === 'typescript') {
+      devDependencies['@types/mongoose'] = '^5.11.97';
+    }
+  } else if (config.orm === 'sequelize') {
+    dependencies['sequelize'] = '^6.32.1';
   }
 
   if (config.authentication === 'jwt') {

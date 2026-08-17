@@ -1,0 +1,28 @@
+import Router from 'koa-router';
+
+<% if (architecture === 'class') { %>
+export class AppRouter {
+  private router: Router;
+
+  constructor() {
+    this.router = new Router({ prefix: '/api' });
+    this.initializeRoutes();
+  }
+
+  private initializeRoutes() {
+    this.router.get('/ping', (ctx) => {
+      ctx.body = { message: 'pong' };
+    });
+  }
+
+  public getRouter(): Router {
+    return this.router;
+  }
+}
+<% } else { %>
+export const router = new Router({ prefix: '/api' });
+
+router.get('/ping', (ctx) => {
+  ctx.body = { message: 'pong' };
+});
+<% } %>

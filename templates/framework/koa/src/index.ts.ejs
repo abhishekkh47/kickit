@@ -1,0 +1,36 @@
+import Koa from 'koa';
+import Router from 'koa-router';
+import bodyParser from 'koa-bodyparser';
+import cors from '@koa/cors';
+import dotenv from 'dotenv';
+<% if (architecture === 'class') { %>
+import { AppRouter } from './routes';
+<% } else { %>
+import { router as apiRouter } from './routes';
+<% } %>
+
+dotenv.config();
+
+const app = new Koa();
+const port = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(bodyParser());
+
+const rootRouter = new Router();
+rootRouter.get('/health', (ctx) => {
+  ctx.status = 200;
+  ctx.body = { status: 'ok', timestamp: new Date().toISOString() };
+});
+app.use(rootRouter.routes());
+
+<% if (architecture === 'class') { %>
+const appRouter = new AppRouter();
+app.use(appRouter.getRouter().routes());
+<% } else { %>
+app.use(apiRouter.routes());
+<% } %>
+
+app.listen(port, () => {
+  console.log(`Koa server running on http://localhost:${port}`);
+});
