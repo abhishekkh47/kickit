@@ -1,0 +1,16 @@
+require('dotenv').config();
+
+module.exports = {
+  development: {
+    url: process.env.DATABASE_URL || 'postgres://postgres:password@localhost:5432/<%= projectName %>_dev',
+    dialect: '<%= database === "postgres" ? "postgres" : (database === "mysql" ? "mysql" : "sqlite") %>'
+  },
+  test: {
+    url: process.env.DATABASE_URL || 'postgres://postgres:password@localhost:5432/<%= projectName %>_test',
+    dialect: '<%= database === "postgres" ? "postgres" : (database === "mysql" ? "mysql" : "sqlite") %>'
+  },
+  production: {
+    url: process.env.DATABASE_URL,
+    dialect: '<%= database === "postgres" ? "postgres" : (database === "mysql" ? "mysql" : "sqlite") %>'
+  }
+};

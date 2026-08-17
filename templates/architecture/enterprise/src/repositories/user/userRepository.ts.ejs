@@ -1,6 +1,5 @@
 <% if (orm === 'prisma') { %>
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '../../config/db';
 <% } else if (orm === 'sequelize') { %>
 import { User } from '../../models/User';
 <% } else if (orm === 'mongoose') { %>

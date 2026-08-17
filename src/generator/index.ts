@@ -56,14 +56,19 @@ export async function generateProject(config: ProjectConfig) {
     await copyTemplateFiles(path.join(templatesDir, `testing/${config.testingFramework}`), targetDir, config);
   }
 
+  // 7.5 Copy .env.example to .env
+  if (fs.existsSync(path.join(targetDir, '.env.example'))) {
+    await fs.copy(path.join(targetDir, '.env.example'), path.join(targetDir, '.env'));
+  }
+
   // 8. Generate package.json
   await generatePackageJson(targetDir, config);
 
   console.log(chalk.green(`\nSuccessfully created project ${config.projectName}!`));
   console.log(`\nNext steps:`);
   console.log(`  cd ${config.projectName}`);
-  console.log(`  npm install`);
-  console.log(`  npm run dev`);
+  console.log(`  ${config.packageManager} install`);
+  console.log(`  ${config.packageManager} run dev`);
 }
 
 async function copyTemplateFiles(source: string, target: string, config: ProjectConfig) {
@@ -75,7 +80,13 @@ async function copyTemplateFiles(source: string, target: string, config: Project
     
     // In templates, directories mapping to `src` should merge, not overwrite.
     // EJS templates usually have `.ejs` extension.
-    const destFileName = file.endsWith('.ejs') ? file.replace('.ejs', '') : file;
+    let destFileName = file.endsWith('.ejs') ? file.replace('.ejs', '') : file;
+    
+    // Evaluate dynamic file names using EJS
+    if (destFileName.includes('<%=')) {
+      destFileName = ejs.render(destFileName, config);
+    }
+    
     const destPath = path.join(target, destFileName);
     
     const stat = await fs.stat(srcPath);

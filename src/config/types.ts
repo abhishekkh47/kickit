@@ -8,6 +8,7 @@ export interface ProjectConfig {
   orm: 'sequelize' | 'prisma' | 'mongoose' | 'none';
   authentication: 'jwt' | 'none';
   testingFramework: 'jest' | 'mocha' | 'none';
+  packageManager: 'npm' | 'yarn' | 'pnpm';
 }
 
 export const defaultOptions: Partial<ProjectConfig> = {
@@ -19,4 +20,5 @@ export const defaultOptions: Partial<ProjectConfig> = {
   orm: 'prisma',
   authentication: 'jwt',
   testingFramework: 'jest',
+  packageManager: 'npm',
 };

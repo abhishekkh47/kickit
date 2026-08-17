@@ -71,6 +71,13 @@ export async function promptUser(projectNameStr?: string): Promise<ProjectConfig
       message: 'Select testing framework:',
       choices: ['jest', 'mocha', 'none'],
       default: defaultOptions.testingFramework,
+    },
+    {
+      type: 'list',
+      name: 'packageManager',
+      message: 'Select package manager:',
+      choices: ['npm', 'yarn', 'pnpm'],
+      default: defaultOptions.packageManager,
     }
   ]);
 
