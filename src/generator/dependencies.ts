@@ -85,5 +85,25 @@ export function getDependencies(config: ProjectConfig) {
     }
   }
 
+  if (config.testingFramework === 'jest') {
+    devDependencies['jest'] = '^29.7.0';
+    devDependencies['supertest'] = '^6.3.3';
+    if (config.language === 'typescript') {
+      devDependencies['ts-jest'] = '^29.1.1';
+      devDependencies['@types/jest'] = '^29.5.11';
+      devDependencies['@types/supertest'] = '^6.0.2';
+    }
+  } else if (config.testingFramework === 'mocha') {
+    devDependencies['mocha'] = '^10.2.0';
+    devDependencies['chai'] = '^4.3.10';
+    devDependencies['supertest'] = '^6.3.3';
+    if (config.language === 'typescript') {
+      devDependencies['@types/mocha'] = '^10.0.6';
+      devDependencies['@types/chai'] = '^4.3.11';
+      devDependencies['@types/supertest'] = '^6.0.2';
+      // ts-node is already in devDependencies for typescript
+    }
+  }
+
   return { dependencies, devDependencies };
 }

@@ -1,0 +1,8 @@
+{
+  "extension": [
+    "<%= language === 'typescript' ? 'ts' : 'js' %>"
+  ],
+  "spec": "tests/**/*.test.<%= language === 'typescript' ? 'ts' : 'js' %>",
+  "timeout": 5000,
+  "exit": true
+}
