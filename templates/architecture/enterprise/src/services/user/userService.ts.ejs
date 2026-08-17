@@ -1,0 +1,27 @@
+<% if (architecture === 'class') { %>
+import { BaseService } from '../BaseService';
+import { UserRepository } from '../../repositories/user/userRepository';
+
+export class UserService extends BaseService {
+  private userRepository: UserRepository;
+
+  constructor() {
+    super();
+    this.userRepository = new UserRepository();
+  }
+
+  public async getUserById(id: string | number) {
+    const user = await this.userRepository.findById(id);
+    if (!user) throw new Error('User not found');
+    return user;
+  }
+}
+<% } else { %>
+import * as userRepository from '../../repositories/user/userRepository';
+
+export const getUserById = async (id: string | number) => {
+  const user = await userRepository.findById(id);
+  if (!user) throw new Error('User not found');
+  return user;
+};
+<% } %>

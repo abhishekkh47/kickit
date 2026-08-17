@@ -1,0 +1,26 @@
+<% if (architecture === 'class') { %>
+export class BaseRepository<T> {
+  // This is a generic base repository
+  // In a real application, you would inject your ORM model here
+  // and implement common methods like find(), findOne(), create(), etc.
+  
+  protected model: any;
+
+  constructor(model: any) {
+    this.model = model;
+  }
+
+  async findById(id: string | number): Promise<T | null> {
+    // Placeholder implementation
+    return null;
+  }
+}
+<% } else { %>
+// This is a generic base repository module
+// In a real application, you would export functions that interact with your ORM
+
+export const findById = async <T>(model: any, id: string | number): Promise<T | null> => {
+  // Placeholder implementation
+  return null;
+};
+<% } %>

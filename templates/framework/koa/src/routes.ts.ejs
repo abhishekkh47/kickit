@@ -1,20 +1,42 @@
 import Router from 'koa-router';
+<% if (structure === 'enterprise') { %>
+import { validate } from './middleware/validate';
+import { userSchema } from './validations';
+<% } %>
+
 <% if (architecture === 'class') { %>
+<% if (structure === 'enterprise') { %>
+import { UserController } from './controllers/user/userController';
+<% } else { %>
 import { AppController } from './controllers';
+<% } %>
 
 export class AppRouter {
   private router: Router;
+<% if (structure === 'enterprise') { %>
+  private userController: UserController;
+<% } else { %>
   private appController: AppController;
+<% } %>
 
   constructor() {
     this.router = new Router({ prefix: '/api' });
+<% if (structure === 'enterprise') { %>
+    this.userController = new UserController();
+<% } else { %>
     this.appController = new AppController();
+<% } %>
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
-    this.router.get('/ping', this.appController.getPing.bind(this.appController));
-    this.router.get('/error', this.appController.getError.bind(this.appController));
+<% if (structure === 'enterprise') { %>
+    this.router.get('/users/:id', this.userController.getUser);
+    this.router.post('/users', validate(userSchema), (ctx) => { ctx.body = { message: 'Valid!' }; });
+<% } else { %>
+    this.router.get('/ping', this.appController.getPing);
+    this.router.get('/error', this.appController.getError);
+<% } %>
   }
 
   public getRouter(): Router {
@@ -22,10 +44,19 @@ export class AppRouter {
   }
 }
 <% } else { %>
+<% if (structure === 'enterprise') { %>
+import { getUser } from './controllers/user/userController';
+<% } else { %>
 import { getPing, getError } from './controllers';
+<% } %>
 
 export const router = new Router({ prefix: '/api' });
 
+<% if (structure === 'enterprise') { %>
+router.get('/users/:id', getUser);
+router.post('/users', validate(userSchema), (ctx) => { ctx.body = { message: 'Valid!' }; });
+<% } else { %>
 router.get('/ping', getPing);
 router.get('/error', getError);
+<% } %>
 <% } %>

@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 
 # Design files
 system.md
+build_test

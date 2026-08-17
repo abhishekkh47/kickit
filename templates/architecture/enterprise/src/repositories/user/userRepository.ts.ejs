@@ -1,0 +1,25 @@
+<% if (architecture === 'class') { %>
+import { BaseRepository } from '../BaseRepository';
+
+export class UserRepository extends BaseRepository<any> {
+  constructor() {
+    super(null /* UserModel */);
+  }
+
+  public async findByEmail(email: string) {
+    return null;
+  }
+}
+<% } else { %>
+import { findById as baseFindById } from '../BaseRepository';
+
+const model = null; /* UserModel */
+
+export const findById = async (id: string | number) => {
+  return baseFindById(model, id);
+};
+
+export const findByEmail = async (email: string) => {
+  return null;
+};
+<% } %>

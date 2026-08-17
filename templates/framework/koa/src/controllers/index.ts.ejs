@@ -2,13 +2,13 @@ import { Context } from 'koa';
 
 <% if (architecture === 'class') { %>
 export class AppController {
-  public async getPing(ctx: Context): Promise<void> {
+  public getPing = async (ctx: Context): Promise<void> => {
     ctx.body = { message: 'pong' };
-  }
+  };
 
-  public async getError(ctx: Context): Promise<void> {
+  public getError = async (ctx: Context): Promise<void> => {
     throw new Error('This is a simulated error');
-  }
+  };
 }
 <% } else { %>
 export const getPing = async (ctx: Context): Promise<void> => {
