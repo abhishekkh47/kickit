@@ -6,7 +6,9 @@ export function getDependencies(config: ProjectConfig) {
     'cors': '^2.8.5'
   };
 
-  const devDependencies: Record<string, string> = {};
+  const devDependencies: Record<string, string> = {
+    'eslint': '^8.53.0'
+  };
 
   if (config.structure === 'enterprise') {
     dependencies['zod'] = '^3.22.4';
@@ -18,6 +20,8 @@ export function getDependencies(config: ProjectConfig) {
     devDependencies['ts-node'] = '^10.9.1';
     devDependencies['@types/node'] = '^20.5.9';
     devDependencies['@types/cors'] = '^2.8.13';
+    devDependencies['@typescript-eslint/parser'] = '^6.11.0';
+    devDependencies['@typescript-eslint/eslint-plugin'] = '^6.11.0';
   }
 
   if (config.framework === 'express') {
