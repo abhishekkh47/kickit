@@ -9,14 +9,14 @@ Say goodbye to manual boilerplate setup. `kickit` generates a fully configured, 
 You can generate a new project instantly using `npx` (no installation required):
 
 ```bash
-npx create-kickit [project-name]
+npx create-kickit-app [project-name]
 ```
 
 Or install it globally to use the command anywhere:
 
 ```bash
-npm install -g kickit
-create-kickit [project-name]
+npm install -g create-kickit-app
+create-kickit-app [project-name]
 ```
 
 ## ✨ Features
@@ -46,7 +46,7 @@ When generating an `enterprise` project, `kickit` automatically configures:
 
 1. Run the CLI:
    ```bash
-   npx create-kickit my-awesome-api
+   npx create-kickit-app my-awesome-api
    ```
 2. Answer the interactive prompts to configure your stack.
 3. Change into your new directory:
