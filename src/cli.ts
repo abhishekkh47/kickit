@@ -11,7 +11,7 @@ program
   .description('CLI to generate backend boilerplates')
   .argument('[project-name]', 'Name of the project')
   .action(async (projectNameStr) => {
-    console.log(chalk.blue('Welcome to kickit generator!'));
+    console.log(chalk.blue('Welcome to node-firestart generator!'));
     
     try {
       const config = await promptUser(projectNameStr);

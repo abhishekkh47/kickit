@@ -6,10 +6,15 @@ import chalk from 'chalk';
 import { getDependencies } from './dependencies';
 
 export async function generateProject(config: ProjectConfig) {
-  const targetDir = path.join(process.cwd(), config.projectName);
+  const isCurrentDir = config.projectName === '.';
+  const targetDir = isCurrentDir ? process.cwd() : path.join(process.cwd(), config.projectName);
 
-  if (fs.existsSync(targetDir)) {
+  if (!isCurrentDir && fs.existsSync(targetDir)) {
     throw new Error(`Directory ${targetDir} already exists.`);
+  }
+
+  if (isCurrentDir) {
+    config.projectName = path.basename(process.cwd());
   }
 
   // Create project directory
@@ -111,7 +116,7 @@ async function generatePackageJson(targetDir: string, config: ProjectConfig) {
   const packageJson = {
     name: config.projectName,
     version: '1.0.0',
-    description: 'Backend API generated with kickit',
+    description: 'Backend API generated with node-firestart',
     main: config.language === 'typescript' ? 'dist/index.js' : 'src/index.js',
     scripts: {
       dev: config.language === 'typescript' ? 'ts-node src/index.ts' : 'nodemon src/index.js',

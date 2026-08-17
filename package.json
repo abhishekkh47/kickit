@@ -1,10 +1,10 @@
 {
-  "name": "create-kickit-app",
+  "name": "node-firestart",
   "version": "1.0.0",
   "description": "npm package to kick-start your production grade application",
   "main": "dist/cli.js",
   "bin": {
-    "create-kickit-app": "./dist/cli.js"
+    "node-firestart": "./dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
