@@ -51,7 +51,12 @@ export async function generateProject(config: ProjectConfig) {
     await copyTemplateFiles(path.join(templatesDir, `auth/${config.authentication}`), targetDir, config);
   }
 
-  // 7. Generate package.json
+  // 7. Testing templates
+  if (config.testingFramework !== 'none') {
+    await copyTemplateFiles(path.join(templatesDir, `testing/${config.testingFramework}`), targetDir, config);
+  }
+
+  // 8. Generate package.json
   await generatePackageJson(targetDir, config);
 
   console.log(chalk.green(`\nSuccessfully created project ${config.projectName}!`));
@@ -103,6 +108,13 @@ async function generatePackageJson(targetDir: string, config: ProjectConfig) {
       start: 'node dist/index.js',
       lint: config.language === 'typescript' ? 'eslint src --ext .ts' : 'eslint src --ext .js',
       'lint:fix': config.language === 'typescript' ? 'eslint src --ext .ts --fix' : 'eslint src --ext .js --fix',
+      ...(config.testingFramework === 'jest' ? {
+        'test': 'jest'
+      } : config.testingFramework === 'mocha' ? {
+        'test': config.language === 'typescript' ? 'mocha -r ts-node/register tests/**/*.test.ts' : 'mocha tests/**/*.test.js'
+      } : {
+        'test': 'echo "Error: no test specified" && exit 1'
+      }),
       ...(config.orm === 'sequelize' ? {
         'migrate': 'sequelize-cli db:migrate',
         'migrate:undo': 'sequelize-cli db:migrate:undo'

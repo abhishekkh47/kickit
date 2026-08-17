@@ -64,6 +64,13 @@ export async function promptUser(projectNameStr?: string): Promise<ProjectConfig
       message: 'Select authentication:',
       choices: ['jwt', 'none'],
       default: defaultOptions.authentication,
+    },
+    {
+      type: 'list',
+      name: 'testingFramework',
+      message: 'Select testing framework:',
+      choices: ['jest', 'mocha', 'none'],
+      default: defaultOptions.testingFramework,
     }
   ]);
 

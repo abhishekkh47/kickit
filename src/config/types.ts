@@ -7,6 +7,7 @@ export interface ProjectConfig {
   database: 'postgres' | 'mongodb' | 'mysql' | 'none';
   orm: 'sequelize' | 'prisma' | 'mongoose' | 'none';
   authentication: 'jwt' | 'none';
+  testingFramework: 'jest' | 'mocha' | 'none';
 }
 
 export const defaultOptions: Partial<ProjectConfig> = {
@@ -17,4 +18,5 @@ export const defaultOptions: Partial<ProjectConfig> = {
   database: 'postgres',
   orm: 'prisma',
   authentication: 'jwt',
+  testingFramework: 'jest',
 };
