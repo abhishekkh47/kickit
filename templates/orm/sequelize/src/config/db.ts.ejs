@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize';
 import { env } from './index';
 <% } %>
 
-const dbUrl = <% if (structure === 'enterprise') { %> env.DATABASE_URL || process.env.DATABASE_URL <% } else { %> process.env.DATABASE_URL <% } %>;
+const dbUrl = <% if (structure === 'enterprise') { %> env.DATABASE_URL <% } else { %> process.env.DATABASE_URL <% } %>;
 
 const sequelize = new Sequelize(dbUrl as string, {
   dialect: '<%= database === "postgres" ? "postgres" : (database === "mysql" ? "mysql" : "sqlite") %>',
