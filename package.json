@@ -1,10 +1,10 @@
 {
-  "name": "kickit-backend",
+  "name": "kickit",
   "version": "1.0.0",
   "description": "npm package to kick-start your production grade application",
   "main": "dist/cli.js",
   "bin": {
-    "create-kickit-backend": "./dist/cli.js"
+    "create-kickit": "./dist/cli.js"
   },
   "scripts": {
     "build": "tsc",

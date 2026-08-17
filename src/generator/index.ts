@@ -95,7 +95,7 @@ async function generatePackageJson(targetDir: string, config: ProjectConfig) {
   const packageJson = {
     name: config.projectName,
     version: '1.0.0',
-    description: 'Backend API generated with kickit-backend',
+    description: 'Backend API generated with kickit',
     main: config.language === 'typescript' ? 'dist/index.js' : 'src/index.js',
     scripts: {
       dev: config.language === 'typescript' ? 'ts-node src/index.ts' : 'nodemon src/index.js',
