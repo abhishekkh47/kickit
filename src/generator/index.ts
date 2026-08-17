@@ -26,7 +26,22 @@ export async function generateProject(config: ProjectConfig) {
   // 3. Framework templates
   await copyTemplateFiles(path.join(templatesDir, `framework/${config.framework}`), targetDir, config);
   
-  // 4. Generate package.json
+  // 4. Database common templates
+  if (config.database !== 'none') {
+    await copyTemplateFiles(path.join(templatesDir, `database/common`), targetDir, config);
+  }
+
+  // 5. ORM templates
+  if (config.orm !== 'none') {
+    await copyTemplateFiles(path.join(templatesDir, `orm/${config.orm}`), targetDir, config);
+  }
+
+  // 6. Auth templates
+  if (config.authentication !== 'none') {
+    await copyTemplateFiles(path.join(templatesDir, `auth/${config.authentication}`), targetDir, config);
+  }
+
+  // 7. Generate package.json
   await generatePackageJson(targetDir, config);
 
   console.log(chalk.green(`\nSuccessfully created project ${config.projectName}!`));
