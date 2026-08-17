@@ -24,6 +24,7 @@ export function getDependencies(config: ProjectConfig) {
     dependencies['express'] = '^4.18.2';
     if (config.structure === 'enterprise') {
       dependencies['express-rate-limit'] = '^7.1.0';
+      dependencies['helmet'] = '^7.0.0';
     }
     if (config.language === 'typescript') {
       devDependencies['@types/express'] = '^4.17.17';
@@ -35,6 +36,7 @@ export function getDependencies(config: ProjectConfig) {
     dependencies['@koa/cors'] = '^4.0.0';
     if (config.structure === 'enterprise') {
       dependencies['koa-ratelimit'] = '^5.0.1';
+      dependencies['koa-helmet'] = '^7.0.2';
     }
     if (config.language === 'typescript') {
       devDependencies['@types/koa'] = '^2.13.8';

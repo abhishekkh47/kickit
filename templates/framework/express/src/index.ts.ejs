@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 <% if (structure === 'enterprise') { %>
+import helmet from 'helmet';
 import { apiLimiter } from './middleware/rateLimiter';
 <% } %>
 <% if (architecture === 'class') { %>
@@ -31,8 +32,31 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 <% if (structure === 'enterprise') { %>
+// Basic Security Headers
+app.use(helmet());
+
 // Apply the rate limiting middleware to all requests
 app.use(apiLimiter);
+
+/* 
+ * ========================================================
+ * ADVANCED SECURITY CONFIGURATION (OPTIONAL)
+ * ========================================================
+ * 
+ * 1. Deep XSS Sanitization
+ *    npm install xss-clean
+ *    import xss from 'xss-clean';
+ *    app.use(xss());
+ * 
+ * 2. CSRF Protection
+ *    npm install csrf-sync
+ *    import { csrfSync } from 'csrf-sync';
+ *    const { csrfSynchronisedProtection } = csrfSync({
+ *      getTokenFromRequest: (req) => req.headers['x-csrf-token'],
+ *    });
+ *    app.use(csrfSynchronisedProtection);
+ * ========================================================
+ */
 <% } %>
 
 // Basic health check
