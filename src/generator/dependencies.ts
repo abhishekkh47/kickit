@@ -22,6 +22,9 @@ export function getDependencies(config: ProjectConfig) {
 
   if (config.framework === 'express') {
     dependencies['express'] = '^4.18.2';
+    if (config.structure === 'enterprise') {
+      dependencies['express-rate-limit'] = '^7.1.0';
+    }
     if (config.language === 'typescript') {
       devDependencies['@types/express'] = '^4.17.17';
     }
@@ -30,11 +33,17 @@ export function getDependencies(config: ProjectConfig) {
     dependencies['koa-router'] = '^12.0.0';
     dependencies['koa-bodyparser'] = '^4.4.1';
     dependencies['@koa/cors'] = '^4.0.0';
+    if (config.structure === 'enterprise') {
+      dependencies['koa-ratelimit'] = '^5.0.1';
+    }
     if (config.language === 'typescript') {
       devDependencies['@types/koa'] = '^2.13.8';
       devDependencies['@types/koa-router'] = '^3.4.4';
       devDependencies['@types/koa-bodyparser'] = '^4.3.10';
       devDependencies['@types/koa__cors'] = '^4.0.0';
+      if (config.structure === 'enterprise') {
+        devDependencies['@types/koa-ratelimit'] = '^5.0.0';
+      }
     }
   }
 

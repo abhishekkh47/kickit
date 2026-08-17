@@ -4,6 +4,9 @@ import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
+<% if (structure === 'enterprise') { %>
+import { apiLimiter } from './middleware/rateLimiter';
+<% } %>
 <% if (architecture === 'class') { %>
 import { AppRouter } from './routes';
 <% } else { %>
@@ -29,6 +32,10 @@ connectDB();
 
 app.use(cors());
 app.use(bodyParser());
+<% if (structure === 'enterprise') { %>
+// Apply the rate limiting middleware to all requests
+app.use(apiLimiter);
+<% } %>
 
 // Global Error Handler
 app.use(errorHandler);

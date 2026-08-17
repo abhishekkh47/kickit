@@ -1,0 +1,26 @@
+import ratelimit from 'koa-ratelimit';
+import { HTTP_STATUS, META_CODE } from '../utils/constants';
+
+const db = new Map();
+
+export const apiLimiter = ratelimit({
+  driver: 'memory',
+  db: db,
+  duration: 15 * 60 * 1000, // 15 minutes
+  errorMessage: {
+    meta: {
+      code: META_CODE.FAIL,
+      message: 'Too many requests from this IP, please try again after 15 minutes'
+    },
+    data: null
+  },
+  id: (ctx) => ctx.ip,
+  headers: {
+    remaining: 'Rate-Limit-Remaining',
+    reset: 'Rate-Limit-Reset',
+    total: 'Rate-Limit-Total'
+  },
+  max: 100, // Limit each IP to 100 requests
+  disableHeader: false,
+  throw: true,
+});
