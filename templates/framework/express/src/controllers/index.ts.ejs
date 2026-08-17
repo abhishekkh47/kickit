@@ -1,0 +1,37 @@
+import { Request, Response, NextFunction } from 'express';
+
+<% if (architecture === 'class') { %>
+export class AppController {
+  public async getPing(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      res.json({ message: 'pong' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getError(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      throw new Error('This is a simulated error');
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+<% } else { %>
+export const getPing = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    res.json({ message: 'pong' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getError = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    throw new Error('This is a simulated error');
+  } catch (error) {
+    next(error);
+  }
+};
+<% } %>

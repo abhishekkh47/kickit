@@ -1,18 +1,21 @@
 import { Router } from 'express';
-
 <% if (architecture === 'class') { %>
+import { AppController } from './controllers';
+
 export class AppRouter {
   private router: Router;
+  private appController: AppController;
 
   constructor() {
     this.router = Router();
+    this.appController = new AppController();
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
-    this.router.get('/ping', (req, res) => {
-      res.json({ message: 'pong' });
-    });
+    // We must bind the context for class methods
+    this.router.get('/ping', this.appController.getPing.bind(this.appController));
+    this.router.get('/error', this.appController.getError.bind(this.appController));
   }
 
   public getRouter(): Router {
@@ -20,11 +23,12 @@ export class AppRouter {
   }
 }
 <% } else { %>
+import { getPing, getError } from './controllers';
+
 const router = Router();
 
-router.get('/ping', (req, res) => {
-  res.json({ message: 'pong' });
-});
+router.get('/ping', getPing);
+router.get('/error', getError);
 
 export default router;
 <% } %>

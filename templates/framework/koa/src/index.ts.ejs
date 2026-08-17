@@ -3,6 +3,7 @@ import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
 import dotenv from 'dotenv';
+import { errorHandler } from './middleware/errorHandler';
 <% if (architecture === 'class') { %>
 import { AppRouter } from './routes';
 <% } else { %>
@@ -16,6 +17,9 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser());
+
+// Global Error Handler
+app.use(errorHandler);
 
 const rootRouter = new Router();
 rootRouter.get('/health', (ctx) => {
