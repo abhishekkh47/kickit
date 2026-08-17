@@ -10,6 +10,7 @@ export function getDependencies(config: ProjectConfig) {
 
   if (config.structure === 'enterprise') {
     dependencies['zod'] = '^3.22.4';
+    dependencies['winston'] = '^3.10.0';
   }
 
   if (config.language === 'typescript') {
@@ -28,10 +29,12 @@ export function getDependencies(config: ProjectConfig) {
     dependencies['koa'] = '^2.14.2';
     dependencies['koa-router'] = '^12.0.0';
     dependencies['koa-bodyparser'] = '^4.4.1';
+    dependencies['@koa/cors'] = '^4.0.0';
     if (config.language === 'typescript') {
       devDependencies['@types/koa'] = '^2.13.8';
       devDependencies['@types/koa-router'] = '^3.4.4';
       devDependencies['@types/koa-bodyparser'] = '^4.3.10';
+      devDependencies['@types/koa__cors'] = '^4.0.0';
     }
   }
 

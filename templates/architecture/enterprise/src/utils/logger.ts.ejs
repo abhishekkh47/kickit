@@ -1,0 +1,33 @@
+import { createLogger, format, transports } from 'winston';
+
+const { combine, timestamp, errors, json, colorize, printf } = format;
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+const serializeErrors = format((info) => {
+  if (info.error instanceof Error) {
+    info.error = { message: info.error.message, stack: info.error.stack, ...info.error };
+  }
+  return info;
+});
+
+const devFormat = printf(({ level, message, timestamp, stack, error, ...meta }) => {
+  let out = `${timestamp} [${level}]: ${stack || message}`;
+  if (error) {
+    const errObj = error as any;
+    out += `\n  error: ${errObj.stack || errObj.message || JSON.stringify(errObj)}`;
+  }
+  const remaining = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : "";
+  return out + remaining;
+});
+
+export const logger = createLogger({
+  level: process.env.LOG_LEVEL || (isProduction ? 'info' : 'debug'),
+  format: combine(
+    timestamp({ format: 'YYYY-MM-DDTHH:mm:ss.SSSZ' }),
+    errors({ stack: true }),
+    serializeErrors(),
+    isProduction ? json() : combine(colorize(), devFormat)
+  ),
+  transports: [new transports.Console()],
+});
