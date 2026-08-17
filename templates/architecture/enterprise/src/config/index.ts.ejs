@@ -9,6 +9,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().optional(),
 <% if (authentication === 'jwt') { %>
   JWT_SECRET: z.string().default('secret'),
+  JWT_EXPIRES_IN: z.string().default('1d'),
 <% } %>
 });
 

@@ -1,25 +1,72 @@
+<% if (orm === 'prisma') { %>
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+<% } else if (orm === 'sequelize') { %>
+import { User } from '../../../models/User';
+<% } else if (orm === 'mongoose') { %>
+import User from '../../../models/User';
+<% } %>
+
 <% if (architecture === 'class') { %>
 import { BaseRepository } from '../BaseRepository';
 
 export class UserRepository extends BaseRepository<any> {
   constructor() {
-    super(null /* UserModel */);
+    super(null);
   }
 
   public async findByEmail(email: string) {
+<% if (orm === 'prisma') { %>
+    return prisma.user.findUnique({ where: { email } });
+<% } else if (orm === 'sequelize') { %>
+    return User.findOne({ where: { email } });
+<% } else if (orm === 'mongoose') { %>
+    return User.findOne({ email });
+<% } else { %>
     return null;
+<% } %>
+  }
+
+  public async create(data: any) {
+<% if (orm === 'prisma') { %>
+    return prisma.user.create({ data });
+<% } else if (orm === 'sequelize') { %>
+    return User.create(data);
+<% } else if (orm === 'mongoose') { %>
+    return User.create(data);
+<% } else { %>
+    return null;
+<% } %>
   }
 }
 <% } else { %>
 import { findById as baseFindById } from '../BaseRepository';
 
-const model = null; /* UserModel */
-
 export const findById = async (id: string | number) => {
-  return baseFindById(model, id);
+  return baseFindById(null, id);
 };
 
 export const findByEmail = async (email: string) => {
+<% if (orm === 'prisma') { %>
+  return prisma.user.findUnique({ where: { email } });
+<% } else if (orm === 'sequelize') { %>
+  return User.findOne({ where: { email } });
+<% } else if (orm === 'mongoose') { %>
+  return User.findOne({ email });
+<% } else { %>
   return null;
+<% } %>
+};
+
+export const create = async (data: any) => {
+<% if (orm === 'prisma') { %>
+  return prisma.user.create({ data });
+<% } else if (orm === 'sequelize') { %>
+  return User.create(data);
+<% } else if (orm === 'mongoose') { %>
+  return User.create(data);
+<% } else { %>
+  return null;
+<% } %>
 };
 <% } %>

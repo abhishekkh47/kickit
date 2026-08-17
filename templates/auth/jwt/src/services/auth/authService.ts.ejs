@@ -1,0 +1,94 @@
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { ApiError } from '../../utils/ApiError';
+import { env } from '../../config';
+
+<% if (architecture === 'class') { %>
+import { BaseService } from '../BaseService';
+import { UserRepository } from '../../repositories/user/userRepository';
+
+export class AuthService extends BaseService {
+  private userRepository: UserRepository;
+
+  constructor() {
+    super();
+    this.userRepository = new UserRepository();
+  }
+
+  public async register(data: any) {
+    const existingUser = await this.userRepository.findByEmail(data.email);
+    if (existingUser) {
+      throw new ApiError(400, 'User with this email already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const user = await this.userRepository.create({ ...data, password: hashedPassword });
+    
+    return this.generateAuthResponse(user);
+  }
+
+  public async login(data: any) {
+    const user: any = await this.userRepository.findByEmail(data.email);
+    if (!user) {
+      throw new ApiError(401, 'Invalid email or password');
+    }
+
+    const isValidPassword = await bcrypt.compare(data.password, user.password);
+    if (!isValidPassword) {
+      throw new ApiError(401, 'Invalid email or password');
+    }
+
+    return this.generateAuthResponse(user);
+  }
+
+  private generateAuthResponse(user: any) {
+    const token = jwt.sign(
+      { id: user.id || user._id, email: user.email },
+      env.JWT_SECRET,
+      { expiresIn: env.JWT_EXPIRES_IN }
+    );
+
+    const userProfile = { id: user.id || user._id, email: user.email };
+    return { user: userProfile, token };
+  }
+}
+<% } else { %>
+import * as userRepository from '../../repositories/user/userRepository';
+
+export const register = async (data: any) => {
+  const existingUser = await userRepository.findByEmail(data.email);
+  if (existingUser) {
+    throw new ApiError(400, 'User with this email already exists');
+  }
+
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  const user = await userRepository.create({ ...data, password: hashedPassword });
+  
+  return generateAuthResponse(user);
+};
+
+export const login = async (data: any) => {
+  const user: any = await userRepository.findByEmail(data.email);
+  if (!user) {
+    throw new ApiError(401, 'Invalid email or password');
+  }
+
+  const isValidPassword = await bcrypt.compare(data.password, user.password);
+  if (!isValidPassword) {
+    throw new ApiError(401, 'Invalid email or password');
+  }
+
+  return generateAuthResponse(user);
+};
+
+const generateAuthResponse = (user: any) => {
+  const token = jwt.sign(
+    { id: user.id || user._id, email: user.email },
+    env.JWT_SECRET,
+    { expiresIn: env.JWT_EXPIRES_IN }
+  );
+
+  const userProfile = { id: user.id || user._id, email: user.email };
+  return { user: userProfile, token };
+};
+<% } %>
