@@ -5,6 +5,7 @@ import cors from '@koa/cors';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 <% if (structure === 'enterprise') { %>
+import helmet from 'koa-helmet';
 import { apiLimiter } from './middleware/rateLimiter';
 <% } %>
 <% if (architecture === 'class') { %>
@@ -33,8 +34,36 @@ connectDB();
 app.use(cors());
 app.use(bodyParser());
 <% if (structure === 'enterprise') { %>
+// Basic Security Headers
+app.use(helmet());
+
 // Apply the rate limiting middleware to all requests
 app.use(apiLimiter);
+
+/* 
+ * ========================================================
+ * ADVANCED SECURITY CONFIGURATION (OPTIONAL)
+ * ========================================================
+ * 
+ * 1. Deep XSS Sanitization
+ *    npm install xss-clean
+ *    // Koa requires a wrapper or custom middleware for xss-clean
+ *    // Alternatively, use koa-xss-sanitizer
+ *    npm install koa-xss-sanitizer
+ *    import { xss } from 'koa-xss-sanitizer';
+ *    app.use(xss());
+ * 
+ * 2. CSRF Protection
+ *    npm install koa-csrf
+ *    import CSRF from 'koa-csrf';
+ *    app.use(new CSRF({
+ *      invalidTokenMessage: 'Invalid CSRF token',
+ *      invalidTokenStatusCode: 403,
+ *      excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
+ *      disableQuery: false
+ *    }));
+ * ========================================================
+ */
 <% } %>
 
 // Global Error Handler
