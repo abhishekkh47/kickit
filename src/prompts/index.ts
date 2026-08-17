@@ -49,8 +49,13 @@ export async function promptUser(projectNameStr?: string): Promise<ProjectConfig
       type: 'list',
       name: 'orm',
       message: 'Select ORM/ODM:',
-      choices: ['prisma', 'sequelize', 'mongoose', 'none'],
-      default: defaultOptions.orm,
+      choices: (answers) => {
+        if (answers.database === 'mongodb') {
+          return ['mongoose', 'prisma', 'none'];
+        }
+        return ['sequelize', 'prisma', 'none'];
+      },
+      default: (answers: any) => answers.database === 'mongodb' ? 'mongoose' : 'sequelize',
       when: (answers) => answers.database !== 'none',
     },
     {
