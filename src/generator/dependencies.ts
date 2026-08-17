@@ -8,6 +8,10 @@ export function getDependencies(config: ProjectConfig) {
 
   const devDependencies: Record<string, string> = {};
 
+  if (config.structure === 'enterprise') {
+    dependencies['zod'] = '^3.22.4';
+  }
+
   if (config.language === 'typescript') {
     devDependencies['typescript'] = '^5.2.2';
     devDependencies['ts-node'] = '^10.9.1';
@@ -51,6 +55,7 @@ export function getDependencies(config: ProjectConfig) {
     }
   } else if (config.orm === 'sequelize') {
     dependencies['sequelize'] = '^6.32.1';
+    devDependencies['sequelize-cli'] = '^6.6.1';
   }
 
   if (config.authentication === 'jwt') {

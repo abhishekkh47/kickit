@@ -27,9 +27,16 @@ export async function promptUser(projectNameStr?: string): Promise<ProjectConfig
     {
       type: 'list',
       name: 'architecture',
-      message: 'Select architecture:',
+      message: 'Select architecture paradigm:',
       choices: ['class', 'functional'],
       default: defaultOptions.architecture,
+    },
+    {
+      type: 'list',
+      name: 'structure',
+      message: 'Select folder structure:',
+      choices: ['simple', 'enterprise'],
+      default: defaultOptions.structure,
     },
     {
       type: 'list',

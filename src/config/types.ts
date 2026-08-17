@@ -3,6 +3,7 @@ export interface ProjectConfig {
   language: 'typescript' | 'javascript';
   framework: 'express' | 'koa';
   architecture: 'class' | 'functional';
+  structure: 'simple' | 'enterprise';
   database: 'postgres' | 'mongodb' | 'mysql' | 'none';
   orm: 'sequelize' | 'prisma' | 'mongoose' | 'none';
   authentication: 'jwt' | 'none';
@@ -12,6 +13,7 @@ export const defaultOptions: Partial<ProjectConfig> = {
   language: 'typescript',
   framework: 'express',
   architecture: 'class',
+  structure: 'simple',
   database: 'postgres',
   orm: 'prisma',
   authentication: 'jwt',

@@ -1,0 +1,14 @@
+{
+  "development": {
+    "url": "postgres://postgres:password@localhost:5432/<%= projectName %>_dev",
+    "dialect": "postgres"
+  },
+  "test": {
+    "url": "postgres://postgres:password@localhost:5432/<%= projectName %>_test",
+    "dialect": "postgres"
+  },
+  "production": {
+    "url": "postgres://postgres:password@localhost:5432/<%= projectName %>_prod",
+    "dialect": "postgres"
+  }
+}

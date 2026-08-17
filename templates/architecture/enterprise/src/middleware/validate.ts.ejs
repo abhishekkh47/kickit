@@ -1,0 +1,45 @@
+import { AnyZodObject, ZodError } from 'zod';
+<% if (framework === 'express') { %>
+import { Request, Response, NextFunction } from 'express';
+
+export const validate = (schema: AnyZodObject) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await schema.parseAsync(req.body);
+      next();
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'Validation failed',
+          errors: error.errors,
+        });
+      }
+      next(error);
+    }
+  };
+};
+<% } else { %>
+import { Context, Next } from 'koa';
+
+export const validate = (schema: AnyZodObject) => {
+  return async (ctx: Context, next: Next) => {
+    try {
+      // koa-bodyparser puts body on ctx.request.body
+      await schema.parseAsync(ctx.request.body);
+      await next();
+    } catch (error) {
+      if (error instanceof ZodError) {
+        ctx.status = 400;
+        ctx.body = {
+          status: 'error',
+          message: 'Validation failed',
+          errors: error.errors,
+        };
+        return;
+      }
+      throw error;
+    }
+  };
+};
+<% } %>

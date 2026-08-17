@@ -1,0 +1,54 @@
+<% if (framework === 'express') { %>
+import { Request, Response, NextFunction } from 'express';
+<% } else { %>
+import { Context } from 'koa';
+<% } %>
+
+<% if (architecture === 'class') { %>
+import { BaseController } from '../BaseController';
+import { UserService } from '../../services/user/userService';
+
+export class UserController extends BaseController {
+  private userService: UserService;
+
+  constructor() {
+    super();
+    this.userService = new UserService();
+  }
+
+<% if (framework === 'express') { %>
+  public getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const user = await this.userService.getUserById(req.params.id);
+      this.successResponse(res, user);
+    } catch (error) {
+      next(error);
+    }
+  };
+<% } else { %>
+  public getUser = async (ctx: Context): Promise<void> => {
+    const user = await this.userService.getUserById(ctx.params.id);
+    this.successResponse(ctx, user);
+  };
+<% } %>
+}
+<% } else { %>
+import { successResponse, errorResponse } from '../BaseController';
+import * as userService from '../../services/user/userService';
+
+<% if (framework === 'express') { %>
+export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const user = await userService.getUserById(req.params.id);
+    successResponse(res, user);
+  } catch (error) {
+    next(error);
+  }
+};
+<% } else { %>
+export const getUser = async (ctx: Context): Promise<void> => {
+  const user = await userService.getUserById(ctx.params.id);
+  successResponse(ctx, user);
+};
+<% } %>
+<% } %>

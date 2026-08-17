@@ -1,0 +1,66 @@
+<% if (framework === 'express') { %>
+import { Response } from 'express';
+
+<% if (architecture === 'class') { %>
+export class BaseController {
+  protected successResponse(res: Response, data: any = null, code = 200, message = 'Success', extras?: any) {
+    const response: any = { meta: { code, message }, data };
+    if (extras) Object.assign(response.meta, extras);
+    return res.status(code).json(response);
+  }
+
+  protected errorResponse(res: Response, error: any) {
+    const code = error.statusCode || 500;
+    const message = error.message || 'Internal Server Error';
+    return res.status(code).json({ meta: { code, message }, data: null });
+  }
+}
+<% } else { %>
+export const successResponse = (res: Response, data: any = null, code = 200, message = 'Success', extras?: any) => {
+  const response: any = { meta: { code, message }, data };
+  if (extras) Object.assign(response.meta, extras);
+  return res.status(code).json(response);
+};
+
+export const errorResponse = (res: Response, error: any) => {
+  const code = error.statusCode || 500;
+  const message = error.message || 'Internal Server Error';
+  return res.status(code).json({ meta: { code, message }, data: null });
+};
+<% } %>
+
+<% } else { %>
+import { Context } from 'koa';
+
+<% if (architecture === 'class') { %>
+export class BaseController {
+  protected successResponse(ctx: Context, data: any = null, code = 200, message = 'Success', extras?: any) {
+    const response: any = { meta: { code, message }, data };
+    if (extras) Object.assign(response.meta, extras);
+    ctx.status = code;
+    ctx.body = response;
+  }
+
+  protected errorResponse(ctx: Context, error: any) {
+    const code = error.status || error.statusCode || 500;
+    const message = error.message || 'Internal Server Error';
+    ctx.status = code;
+    ctx.body = { meta: { code, message }, data: null };
+  }
+}
+<% } else { %>
+export const successResponse = (ctx: Context, data: any = null, code = 200, message = 'Success', extras?: any) => {
+  const response: any = { meta: { code, message }, data };
+  if (extras) Object.assign(response.meta, extras);
+  ctx.status = code;
+  ctx.body = response;
+};
+
+export const errorResponse = (ctx: Context, error: any) => {
+  const code = error.status || error.statusCode || 500;
+  const message = error.message || 'Internal Server Error';
+  ctx.status = code;
+  ctx.body = { meta: { code, message }, data: null };
+};
+<% } %>
+<% } %>
