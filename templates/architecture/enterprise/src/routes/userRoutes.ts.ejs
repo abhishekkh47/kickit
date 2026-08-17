@@ -1,0 +1,45 @@
+<% if (framework === 'express') { %>
+import { Router } from 'express';
+import { validate } from '../middleware/validate';
+import { userSchema } from '../validations';
+<% if (architecture === 'class') { %>
+import { UserController } from '../controllers/user/userController';
+export const userRoutes = Router();
+const userController = new UserController();
+
+// GET /users/:id
+userRoutes.get('/:id', userController.getUser);
+// POST /users
+userRoutes.post('/', validate(userSchema), (req, res) => res.json({ message: 'Valid!' }));
+<% } else { %>
+import { getUser } from '../controllers/user/userController';
+export const userRoutes = Router();
+
+// GET /users/:id
+userRoutes.get('/:id', getUser);
+// POST /users
+userRoutes.post('/', validate(userSchema), (req, res) => res.json({ message: 'Valid!' }));
+<% } %>
+<% } else { %>
+import Router from 'koa-router';
+import { validate } from '../middleware/validate';
+import { userSchema } from '../validations';
+<% if (architecture === 'class') { %>
+import { UserController } from '../controllers/user/userController';
+export const userRoutes = new Router();
+const userController = new UserController();
+
+// GET /users/:id
+userRoutes.get('/:id', userController.getUser);
+// POST /users
+userRoutes.post('/', validate(userSchema), (ctx) => { ctx.body = { message: 'Valid!' }; });
+<% } else { %>
+import { getUser } from '../controllers/user/userController';
+export const userRoutes = new Router();
+
+// GET /users/:id
+userRoutes.get('/:id', getUser);
+// POST /users
+userRoutes.post('/', validate(userSchema), (ctx) => { ctx.body = { message: 'Valid!' }; });
+<% } %>
+<% } %>

@@ -1,11 +1,26 @@
 import { Context, Next } from 'koa';
+<% if (structure === 'enterprise') { %>
+import { ApiError } from '../utils/ApiError';
+<% } %>
 
 export const errorHandler = async (ctx: Context, next: Next) => {
   try {
     await next();
   } catch (err: any) {
     console.error(err.stack);
-    
+
+<% if (structure === 'enterprise') { %>
+    if (err instanceof ApiError) {
+      ctx.status = err.statusCode;
+      ctx.body = {
+        status: 'error',
+        statusCode: err.statusCode,
+        message: err.message,
+      };
+      return;
+    }
+<% } %>
+
     const statusCode = err.status || err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
     
