@@ -1,15 +1,24 @@
 import mongoose from 'mongoose';
 <% if (structure === 'enterprise') { %>
 import { env } from './index';
+import { logger } from '../utils/logger';
 <% } %>
 
 export const connectDB = async () => {
   try {
     const dbUrl = <% if (structure === 'enterprise') { %> env.DATABASE_URL <% } else { %> process.env.DATABASE_URL <% } %>;
     await mongoose.connect(dbUrl as string);
+<% if (structure === 'enterprise') { %>
+    logger.info('✅ MongoDB Connected successfully');
+<% } else { %>
     console.log('✅ MongoDB Connected successfully');
+<% } %>
   } catch (error: any) {
+<% if (structure === 'enterprise') { %>
+    logger.error(`Error connecting to MongoDB: ${error.message}`);
+<% } else { %>
     console.error(`Error connecting to MongoDB: ${error.message}`);
+<% } %>
     process.exit(1);
   }
 };

@@ -1,66 +1,108 @@
 <% if (framework === 'express') { %>
 import { Response } from 'express';
+import { HTTP_STATUS, META_CODE } from '../utils/constants';
 
 <% if (architecture === 'class') { %>
 export class BaseController {
-  protected successResponse(res: Response, data: any = null, code = 200, message = 'Success', extras?: any) {
-    const response: any = { meta: { code, message }, data };
+  protected successResponseData(res: Response, data: any, code = META_CODE.SUCCESS, message: string, extras?: any) {
+    const response: any = { data, meta: { code, message } };
     if (extras) Object.assign(response.meta, extras);
-    return res.status(code).json(response);
+    return res.status(HTTP_STATUS.SUCCESS).send(response);
   }
 
-  protected errorResponse(res: Response, error: any) {
-    const code = error.statusCode || 500;
-    const message = error.message || 'Internal Server Error';
-    return res.status(code).json({ meta: { code, message }, data: null });
+  protected successResponseWithoutData(res: Response, code = META_CODE.SUCCESS, message: string, extras?: any) {
+    const response: any = { data: null, meta: { code, message } };
+    if (extras) Object.assign(response.meta, extras);
+    return res.status(HTTP_STATUS.SUCCESS).send(response);
+  }
+
+  protected errorResponseData(res: Response, code = HTTP_STATUS.BAD_REQUEST, message: string) {
+    return res.status(code).send({ code: META_CODE.FAIL, message });
+  }
+
+  protected errorResponseWithoutData(res: Response, code = HTTP_STATUS.BAD_REQUEST, message: string) {
+    const response = { data: null, meta: { code: META_CODE.FAIL, message } };
+    return res.status(code).send(response);
   }
 }
 <% } else { %>
-export const successResponse = (res: Response, data: any = null, code = 200, message = 'Success', extras?: any) => {
-  const response: any = { meta: { code, message }, data };
+export const successResponseData = (res: Response, data: any, code = META_CODE.SUCCESS, message: string, extras?: any) => {
+  const response: any = { data, meta: { code, message } };
   if (extras) Object.assign(response.meta, extras);
-  return res.status(code).json(response);
+  return res.status(HTTP_STATUS.SUCCESS).send(response);
 };
 
-export const errorResponse = (res: Response, error: any) => {
-  const code = error.statusCode || 500;
-  const message = error.message || 'Internal Server Error';
-  return res.status(code).json({ meta: { code, message }, data: null });
+export const successResponseWithoutData = (res: Response, code = META_CODE.SUCCESS, message: string, extras?: any) => {
+  const response: any = { data: null, meta: { code, message } };
+  if (extras) Object.assign(response.meta, extras);
+  return res.status(HTTP_STATUS.SUCCESS).send(response);
+};
+
+export const errorResponseData = (res: Response, code = HTTP_STATUS.BAD_REQUEST, message: string) => {
+  return res.status(code).send({ code: META_CODE.FAIL, message });
+};
+
+export const errorResponseWithoutData = (res: Response, code = HTTP_STATUS.BAD_REQUEST, message: string) => {
+  const response = { data: null, meta: { code: META_CODE.FAIL, message } };
+  return res.status(code).send(response);
 };
 <% } %>
 
 <% } else { %>
 import { Context } from 'koa';
+import { HTTP_STATUS, META_CODE } from '../utils/constants';
 
 <% if (architecture === 'class') { %>
 export class BaseController {
-  protected successResponse(ctx: Context, data: any = null, code = 200, message = 'Success', extras?: any) {
-    const response: any = { meta: { code, message }, data };
+  protected successResponseData(ctx: Context, data: any, code = META_CODE.SUCCESS, message: string, extras?: any) {
+    const response: any = { data, meta: { code, message } };
     if (extras) Object.assign(response.meta, extras);
-    ctx.status = code;
+    ctx.status = HTTP_STATUS.SUCCESS;
     ctx.body = response;
   }
 
-  protected errorResponse(ctx: Context, error: any) {
-    const code = error.status || error.statusCode || 500;
-    const message = error.message || 'Internal Server Error';
+  protected successResponseWithoutData(ctx: Context, code = META_CODE.SUCCESS, message: string, extras?: any) {
+    const response: any = { data: null, meta: { code, message } };
+    if (extras) Object.assign(response.meta, extras);
+    ctx.status = HTTP_STATUS.SUCCESS;
+    ctx.body = response;
+  }
+
+  protected errorResponseData(ctx: Context, code = HTTP_STATUS.BAD_REQUEST, message: string) {
     ctx.status = code;
-    ctx.body = { meta: { code, message }, data: null };
+    ctx.body = { code: META_CODE.FAIL, message };
+  }
+
+  protected errorResponseWithoutData(ctx: Context, code = HTTP_STATUS.BAD_REQUEST, message: string) {
+    const response = { data: null, meta: { code: META_CODE.FAIL, message } };
+    ctx.status = code;
+    ctx.body = response;
   }
 }
 <% } else { %>
-export const successResponse = (ctx: Context, data: any = null, code = 200, message = 'Success', extras?: any) => {
-  const response: any = { meta: { code, message }, data };
+export const successResponseData = (ctx: Context, data: any, code = META_CODE.SUCCESS, message: string, extras?: any) => {
+  const response: any = { data, meta: { code, message } };
   if (extras) Object.assign(response.meta, extras);
-  ctx.status = code;
+  ctx.status = HTTP_STATUS.SUCCESS;
   ctx.body = response;
 };
 
-export const errorResponse = (ctx: Context, error: any) => {
-  const code = error.status || error.statusCode || 500;
-  const message = error.message || 'Internal Server Error';
+export const successResponseWithoutData = (ctx: Context, code = META_CODE.SUCCESS, message: string, extras?: any) => {
+  const response: any = { data: null, meta: { code, message } };
+  if (extras) Object.assign(response.meta, extras);
+  ctx.status = HTTP_STATUS.SUCCESS;
+  ctx.body = response;
+};
+
+export const errorResponseData = (ctx: Context, code = HTTP_STATUS.BAD_REQUEST, message: string) => {
   ctx.status = code;
-  ctx.body = { meta: { code, message }, data: null };
+  ctx.body = { code: META_CODE.FAIL, message };
+};
+
+export const errorResponseWithoutData = (ctx: Context, code = HTTP_STATUS.BAD_REQUEST, message: string) => {
+  const response = { data: null, meta: { code: META_CODE.FAIL, message } };
+  ctx.status = code;
+  ctx.body = response;
 };
 <% } %>
 <% } %>

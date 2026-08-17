@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 <% if (structure === 'enterprise') { %>
 import { ApiError } from '../utils/ApiError';
+import { logger } from '../utils/logger';
 <% } %>
 
 export const errorHandler = (
@@ -9,7 +10,11 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+<% if (structure === 'enterprise') { %>
+  logger.error(err);
+<% } else { %>
   console.error(err.stack);
+<% } %>
   
 <% if (structure === 'enterprise') { %>
   if (err instanceof ApiError) {

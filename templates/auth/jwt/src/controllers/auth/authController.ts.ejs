@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 <% } else { %>
 import { Context } from 'koa';
 <% } %>
+import { META_CODE } from '../../utils/constants';
 
 <% if (architecture === 'class') { %>
 import { BaseController } from '../BaseController';
@@ -20,7 +21,7 @@ export class AuthController extends BaseController {
   public register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this.authService.register(req.body);
-      this.successResponse(res, result, 201, 'User registered successfully');
+      this.successResponseData(res, result, META_CODE.SUCCESS, 'User registered successfully');
     } catch (error) {
       next(error);
     }
@@ -29,7 +30,7 @@ export class AuthController extends BaseController {
   public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this.authService.login(req.body);
-      this.successResponse(res, result, 200, 'Login successful');
+      this.successResponseData(res, result, META_CODE.SUCCESS, 'Login successful');
     } catch (error) {
       next(error);
     }
@@ -37,24 +38,24 @@ export class AuthController extends BaseController {
 <% } else { %>
   public register = async (ctx: Context): Promise<void> => {
     const result = await this.authService.register(ctx.request.body);
-    this.successResponse(ctx, result, 201, 'User registered successfully');
+    this.successResponseData(ctx, result, META_CODE.SUCCESS, 'User registered successfully');
   };
 
   public login = async (ctx: Context): Promise<void> => {
     const result = await this.authService.login(ctx.request.body);
-    this.successResponse(ctx, result, 200, 'Login successful');
+    this.successResponseData(ctx, result, META_CODE.SUCCESS, 'Login successful');
   };
 <% } %>
 }
 <% } else { %>
-import { successResponse } from '../BaseController';
+import { successResponseData } from '../BaseController';
 import * as authService from '../../services/auth/authService';
 
 <% if (framework === 'express') { %>
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const result = await authService.register(req.body);
-    successResponse(res, result, 201, 'User registered successfully');
+    successResponseData(res, result, META_CODE.SUCCESS, 'User registered successfully');
   } catch (error) {
     next(error);
   }
@@ -63,7 +64,7 @@ export const register = async (req: Request, res: Response, next: NextFunction):
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const result = await authService.login(req.body);
-    successResponse(res, result, 200, 'Login successful');
+    successResponseData(res, result, META_CODE.SUCCESS, 'Login successful');
   } catch (error) {
     next(error);
   }
@@ -71,12 +72,12 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 <% } else { %>
 export const register = async (ctx: Context): Promise<void> => {
   const result = await authService.register(ctx.request.body);
-  successResponse(ctx, result, 201, 'User registered successfully');
+  successResponseData(ctx, result, META_CODE.SUCCESS, 'User registered successfully');
 };
 
 export const login = async (ctx: Context): Promise<void> => {
   const result = await authService.login(ctx.request.body);
-  successResponse(ctx, result, 200, 'Login successful');
+  successResponseData(ctx, result, META_CODE.SUCCESS, 'Login successful');
 };
 <% } %>
 <% } %>

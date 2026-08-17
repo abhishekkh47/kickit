@@ -1,13 +1,18 @@
 import { Context, Next } from 'koa';
 <% if (structure === 'enterprise') { %>
 import { ApiError } from '../utils/ApiError';
+import { logger } from '../utils/logger';
 <% } %>
 
 export const errorHandler = async (ctx: Context, next: Next) => {
   try {
     await next();
   } catch (err: any) {
+<% if (structure === 'enterprise') { %>
+    logger.error(err);
+<% } else { %>
     console.error(err.stack);
+<% } %>
 
 <% if (structure === 'enterprise') { %>
     if (err instanceof ApiError) {
