@@ -101,6 +101,8 @@ async function generatePackageJson(targetDir: string, config: ProjectConfig) {
       dev: config.language === 'typescript' ? 'ts-node src/index.ts' : 'nodemon src/index.js',
       build: config.language === 'typescript' ? 'tsc' : 'echo "No build step required"',
       start: 'node dist/index.js',
+      lint: config.language === 'typescript' ? 'eslint src --ext .ts' : 'eslint src --ext .js',
+      'lint:fix': config.language === 'typescript' ? 'eslint src --ext .ts --fix' : 'eslint src --ext .js --fix',
       ...(config.orm === 'sequelize' ? {
         'migrate': 'sequelize-cli db:migrate',
         'migrate:undo': 'sequelize-cli db:migrate:undo'
