@@ -60,8 +60,10 @@ export function getDependencies(config: ProjectConfig) {
 
   if (config.authentication === 'jwt') {
     dependencies['jsonwebtoken'] = '^9.0.2';
+    dependencies['bcryptjs'] = '^2.4.3';
     if (config.language === 'typescript') {
-      devDependencies['@types/jsonwebtoken'] = '^9.0.2';
+      devDependencies['@types/jsonwebtoken'] = '^9.0.5';
+      devDependencies['@types/bcryptjs'] = '^2.4.6';
     }
   }
 

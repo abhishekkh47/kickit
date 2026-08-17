@@ -1,6 +1,9 @@
 import Router from 'koa-router';
 <% if (structure === 'enterprise') { %>
 import { userRoutes } from './routes/userRoutes';
+<% if (authentication === 'jwt') { %>
+import { authRoutes } from './routes/authRoutes';
+<% } %>
 <% } %>
 
 <% if (architecture === 'class') { %>
@@ -28,6 +31,9 @@ export class AppRouter {
   private initializeRoutes() {
 <% if (structure === 'enterprise') { %>
     this.router.use('/users', userRoutes.routes(), userRoutes.allowedMethods());
+<% if (authentication === 'jwt') { %>
+    this.router.use('/auth', authRoutes.routes(), authRoutes.allowedMethods());
+<% } %>
 <% } else { %>
     this.router.get('/ping', this.appController.getPing);
     this.router.get('/error', this.appController.getError);
@@ -48,6 +54,9 @@ export const router = new Router({ prefix: '/api' });
 
 <% if (structure === 'enterprise') { %>
 router.use('/users', userRoutes.routes(), userRoutes.allowedMethods());
+<% if (authentication === 'jwt') { %>
+router.use('/auth', authRoutes.routes(), authRoutes.allowedMethods());
+<% } %>
 <% } else { %>
 router.get('/ping', getPing);
 router.get('/error', getError);

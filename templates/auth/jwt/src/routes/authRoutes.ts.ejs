@@ -1,0 +1,37 @@
+<% if (framework === 'express') { %>
+import { Router } from 'express';
+import { validate } from '../../middleware/validate';
+import { registerSchema, loginSchema } from '../../validations';
+<% if (architecture === 'class') { %>
+import { AuthController } from '../auth/authController';
+export const authRoutes = Router();
+const authController = new AuthController();
+
+authRoutes.post('/register', validate(registerSchema), authController.register);
+authRoutes.post('/login', validate(loginSchema), authController.login);
+<% } else { %>
+import { register, login } from '../auth/authController';
+export const authRoutes = Router();
+
+authRoutes.post('/register', validate(registerSchema), register);
+authRoutes.post('/login', validate(loginSchema), login);
+<% } %>
+<% } else { %>
+import Router from 'koa-router';
+import { validate } from '../../middleware/validate';
+import { registerSchema, loginSchema } from '../../validations';
+<% if (architecture === 'class') { %>
+import { AuthController } from '../auth/authController';
+export const authRoutes = new Router();
+const authController = new AuthController();
+
+authRoutes.post('/register', validate(registerSchema), authController.register);
+authRoutes.post('/login', validate(loginSchema), authController.login);
+<% } else { %>
+import { register, login } from '../auth/authController';
+export const authRoutes = new Router();
+
+authRoutes.post('/register', validate(registerSchema), register);
+authRoutes.post('/login', validate(loginSchema), login);
+<% } %>
+<% } %>
