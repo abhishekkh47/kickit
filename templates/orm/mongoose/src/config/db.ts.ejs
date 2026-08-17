@@ -5,7 +5,7 @@ import { env } from './index';
 
 export const connectDB = async () => {
   try {
-    const dbUrl = <% if (structure === 'enterprise') { %> env.DATABASE_URL || process.env.DATABASE_URL <% } else { %> process.env.DATABASE_URL <% } %>;
+    const dbUrl = <% if (structure === 'enterprise') { %> env.DATABASE_URL <% } else { %> process.env.DATABASE_URL <% } %>;
     await mongoose.connect(dbUrl as string);
     console.log('✅ MongoDB Connected successfully');
   } catch (error: any) {
