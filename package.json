@@ -1,7 +1,7 @@
 {
   "name": "node-firestart",
-  "version": "1.0.0",
-  "description": "npm package to kick-start your production grade application",
+  "version": "1.0.2",
+  "description": "npm package to fire-start your production grade application",
   "main": "dist/cli.js",
   "bin": {
     "node-firestart": "./dist/cli.js"

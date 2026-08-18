@@ -14,8 +14,8 @@ export const comparePassword = async (password: string, hash: string): Promise<b
 
 export const generateToken = (payload: object): string => {
 <% if (structure === 'enterprise') { %>
-  return jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN });
+  return jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN as any });
 <% } else { %>
-  return jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: process.env.JWT_EXPIRES_IN || '1d' });
+  return jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: (process.env.JWT_EXPIRES_IN || '1d') as any });
 <% } %>
 };

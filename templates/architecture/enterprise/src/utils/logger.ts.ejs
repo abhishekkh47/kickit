@@ -6,7 +6,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const serializeErrors = format((info) => {
   if (info.error instanceof Error) {
-    info.error = { message: info.error.message, stack: info.error.stack, ...info.error };
+    info.error = { ...info.error, message: info.error.message, stack: info.error.stack };
   }
   return info;
 });
