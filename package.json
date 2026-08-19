@@ -1,10 +1,10 @@
 {
-  "name": "node-firestart",
-  "version": "1.0.2",
-  "description": "npm package to fire-start your production grade application",
+  "name": "buildmyapp",
+  "version": "1.0.0",
+  "description": "npm package to build your production grade application",
   "main": "dist/cli.js",
   "bin": {
-    "node-firestart": "./dist/cli.js"
+    "buildmyapp": "./dist/cli.js"
   },
   "scripts": {
     "build": "tsc",

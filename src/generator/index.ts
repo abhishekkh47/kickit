@@ -116,7 +116,7 @@ async function generatePackageJson(targetDir: string, config: ProjectConfig) {
   const packageJson = {
     name: config.projectName,
     version: '1.0.0',
-    description: 'Backend API generated with node-firestart',
+    description: 'Backend API generated with buildmyapp',
     main: config.language === 'typescript' ? 'dist/index.js' : 'src/index.js',
     scripts: {
       dev: config.language === 'typescript' ? 'ts-node src/index.ts' : 'nodemon src/index.js',

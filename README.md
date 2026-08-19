@@ -1,22 +1,22 @@
-# node-firestart
+# buildmyapp
 
 An enterprise-grade, highly customizable CLI scaffolding tool to kick-start your production Node.js applications. 
 
-Say goodbye to manual boilerplate setup. `node-firestart` generates a fully configured, secure, and structured backend project tailored to your exact architectural preferences, complete with ORM integration, environment validation, authentication, and structured logging.
+Say goodbye to manual boilerplate setup. `buildmyapp` generates a fully configured, secure, and structured backend project tailored to your exact architectural preferences, complete with ORM integration, environment validation, authentication, and structured logging.
 
 ## 🚀 Quick Start
 
 You can generate a new project instantly using `npx` (no installation required):
 
 ```bash
-npx node-firestart [project-name]
+npx buildmyapp [project-name]
 ```
 
 Or install it globally to use the command anywhere:
 
 ```bash
-npm install -g node-firestart
-node-firestart [project-name]
+npm install -g buildmyapp
+buildmyapp [project-name]
 ```
 
 ## ✨ Features
@@ -35,7 +35,7 @@ node-firestart [project-name]
 
 ## 🛠️ Generated Stack Includes
 
-When generating an `enterprise` project, `node-firestart` automatically configures:
+When generating an `enterprise` project, `buildmyapp` automatically configures:
 - **Security**: `cors` and JSON body parsers pre-mounted.
 - **Environment Safety**: `zod` schema validation to ensure your app never boots with missing `.env` variables.
 - **Logging**: `winston` logger configured to output beautiful logs in development and structured JSON in production.
@@ -46,7 +46,7 @@ When generating an `enterprise` project, `node-firestart` automatically configur
 
 1. Run the CLI:
    ```bash
-   npx node-firestart my-awesome-api
+   npx buildmyapp my-awesome-api
    ```
 2. Answer the interactive prompts to configure your stack.
 3. Change into your new directory:
