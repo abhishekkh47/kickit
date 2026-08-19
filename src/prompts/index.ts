@@ -78,6 +78,12 @@ export async function promptUser(projectNameStr?: string): Promise<ProjectConfig
       message: 'Select package manager:',
       choices: ['npm', 'yarn', 'pnpm'],
       default: defaultOptions.packageManager,
+    },
+    {
+      type: 'confirm',
+      name: 'redis',
+      message: 'Configure Redis cache setup?',
+      default: defaultOptions.redis,
     }
   ]);
 

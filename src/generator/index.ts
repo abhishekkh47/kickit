@@ -61,6 +61,11 @@ export async function generateProject(config: ProjectConfig) {
     await copyTemplateFiles(path.join(templatesDir, `testing/${config.testingFramework}`), targetDir, config);
   }
 
+  // 7.2 Redis templates
+  if (config.redis) {
+    await copyTemplateFiles(path.join(templatesDir, `features/redis`), targetDir, config);
+  }
+
   // 7.5 Copy .env.example to .env
   if (fs.existsSync(path.join(targetDir, '.env.example'))) {
     await fs.copy(path.join(targetDir, '.env.example'), path.join(targetDir, '.env'));

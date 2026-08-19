@@ -17,6 +17,9 @@ import { router as apiRouter } from './routes';
 <% if (orm === 'mongoose' || orm === 'sequelize') { %>
 import { connectDB } from './config/db';
 <% } %>
+<% if (redis) { %>
+import { redisClient } from './config/redis';
+<% } %>
 <% if (structure === 'enterprise') { %>
 import { env } from './config';
 <% } %>
@@ -29,6 +32,15 @@ const port = <% if (structure === 'enterprise') { %> env.PORT <% } else { %> pro
 <% if (orm === 'mongoose' || orm === 'sequelize') { %>
 // Connect to database
 connectDB();
+<% } %>
+
+<% if (redis) { %>
+// Connect to Redis
+redisClient.connect().then(() => {
+  console.log('Redis connected successfully');
+}).catch((err) => {
+  console.error('Redis connection failed:', err);
+});
 <% } %>
 
 app.use(cors());

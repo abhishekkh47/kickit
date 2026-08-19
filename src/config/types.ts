@@ -9,6 +9,7 @@ export interface ProjectConfig {
   authentication: 'jwt' | 'none';
   testingFramework: 'jest' | 'mocha' | 'none';
   packageManager: 'npm' | 'yarn' | 'pnpm';
+  redis: boolean;
 }
 
 export const defaultOptions: Partial<ProjectConfig> = {
@@ -21,4 +22,5 @@ export const defaultOptions: Partial<ProjectConfig> = {
   authentication: 'jwt',
   testingFramework: 'jest',
   packageManager: 'npm',
+  redis: false,
 };

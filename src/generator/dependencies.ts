@@ -105,5 +105,9 @@ export function getDependencies(config: ProjectConfig) {
     }
   }
 
+  if (config.redis) {
+    dependencies['redis'] = '^4.6.10';
+  }
+
   return { dependencies, devDependencies };
 }
