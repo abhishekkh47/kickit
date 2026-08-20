@@ -6,7 +6,9 @@ import { Context } from 'koa';
 import { META_CODE } from '../../utils/constants';
 
 <% if (architecture === 'class') { %>
-import { BaseController } from '../BaseController';
+import { BaseController } from '../responseHandler';
+
+<% if (structure === 'enterprise') { %>
 import { AuthService } from '../../services/auth/authService';
 
 export class AuthController extends BaseController {
@@ -48,7 +50,142 @@ export class AuthController extends BaseController {
 <% } %>
 }
 <% } else { %>
-import { successResponseData } from '../BaseController';
+// Simple Architecture
+import { hashPassword, comparePassword, generateToken } from '../../utils/auth';
+import { ApiError } from '../../utils/ApiError';
+<% if (orm === 'mongoose') { %>
+import { User } from '../../models/User';
+<% } else if (orm === 'prisma') { %>
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+<% } else if (orm === 'sequelize') { %>
+import { User } from '../../models/User';
+<% } %>
+
+export class AuthController extends BaseController {
+<% if (framework === 'express') { %>
+  public register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const data = req.body;
+      <% if (orm === 'mongoose') { %>
+      const existingUser = await User.findOne({ email: data.email });
+      <% } else if (orm === 'prisma') { %>
+      const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
+      <% } else if (orm === 'sequelize') { %>
+      const existingUser = await User.findOne({ where: { email: data.email } });
+      <% } %>
+      
+      if (existingUser) {
+        throw new ApiError(400, 'User with this email already exists');
+      }
+
+      const hashedPassword = await hashPassword(data.password);
+      <% if (orm === 'mongoose') { %>
+      const user = await User.create({ ...data, password: hashedPassword });
+      <% } else if (orm === 'prisma') { %>
+      const user = await prisma.user.create({ data: { ...data, password: hashedPassword } });
+      <% } else if (orm === 'sequelize') { %>
+      const user = await User.create({ ...data, password: hashedPassword });
+      <% } %>
+      
+      const token = generateToken({ id: user.id || (user as any)._id, email: user.email });
+      const userProfile = { id: user.id || (user as any)._id, email: user.email };
+      
+      this.successResponseData(res, { user: userProfile, token }, META_CODE.SUCCESS, 'User registered successfully');
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const data = req.body;
+      <% if (orm === 'mongoose') { %>
+      const user: any = await User.findOne({ email: data.email });
+      <% } else if (orm === 'prisma') { %>
+      const user: any = await prisma.user.findUnique({ where: { email: data.email } });
+      <% } else if (orm === 'sequelize') { %>
+      const user: any = await User.findOne({ where: { email: data.email } });
+      <% } %>
+      
+      if (!user) {
+        throw new ApiError(401, 'Invalid email or password');
+      }
+
+      const isValidPassword = await comparePassword(data.password, user.password);
+      if (!isValidPassword) {
+        throw new ApiError(401, 'Invalid email or password');
+      }
+
+      const token = generateToken({ id: user.id || user._id, email: user.email });
+      const userProfile = { id: user.id || user._id, email: user.email };
+      
+      this.successResponseData(res, { user: userProfile, token }, META_CODE.SUCCESS, 'Login successful');
+    } catch (error) {
+      next(error);
+    }
+  };
+<% } else { %>
+  public register = async (ctx: Context): Promise<void> => {
+    const data: any = ctx.request.body;
+    <% if (orm === 'mongoose') { %>
+    const existingUser = await User.findOne({ email: data.email });
+    <% } else if (orm === 'prisma') { %>
+    const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
+    <% } else if (orm === 'sequelize') { %>
+    const existingUser = await User.findOne({ where: { email: data.email } });
+    <% } %>
+    
+    if (existingUser) {
+      throw new ApiError(400, 'User with this email already exists');
+    }
+
+    const hashedPassword = await hashPassword(data.password);
+    <% if (orm === 'mongoose') { %>
+    const user = await User.create({ ...data, password: hashedPassword });
+    <% } else if (orm === 'prisma') { %>
+    const user = await prisma.user.create({ data: { ...data, password: hashedPassword } });
+    <% } else if (orm === 'sequelize') { %>
+    const user = await User.create({ ...data, password: hashedPassword });
+    <% } %>
+    
+    const token = generateToken({ id: user.id || (user as any)._id, email: user.email });
+    const userProfile = { id: user.id || (user as any)._id, email: user.email };
+    
+    this.successResponseData(ctx, { user: userProfile, token }, META_CODE.SUCCESS, 'User registered successfully');
+  };
+
+  public login = async (ctx: Context): Promise<void> => {
+    const data: any = ctx.request.body;
+    <% if (orm === 'mongoose') { %>
+    const user: any = await User.findOne({ email: data.email });
+    <% } else if (orm === 'prisma') { %>
+    const user: any = await prisma.user.findUnique({ where: { email: data.email } });
+    <% } else if (orm === 'sequelize') { %>
+    const user: any = await User.findOne({ where: { email: data.email } });
+    <% } %>
+    
+    if (!user) {
+      throw new ApiError(401, 'Invalid email or password');
+    }
+
+    const isValidPassword = await comparePassword(data.password, user.password);
+    if (!isValidPassword) {
+      throw new ApiError(401, 'Invalid email or password');
+    }
+
+    const token = generateToken({ id: user.id || user._id, email: user.email });
+    const userProfile = { id: user.id || user._id, email: user.email };
+    
+    this.successResponseData(ctx, { user: userProfile, token }, META_CODE.SUCCESS, 'Login successful');
+  };
+<% } %>
+}
+<% } %>
+<% } else { %>
+import { successResponseData } from '../responseHandler';
+
+<% if (structure === 'enterprise') { %>
 import * as authService from '../../services/auth/authService';
 
 <% if (framework === 'express') { %>
@@ -79,5 +216,136 @@ export const login = async (ctx: Context): Promise<void> => {
   const result = await authService.login(ctx.request.body);
   successResponseData(ctx, result, META_CODE.SUCCESS, 'Login successful');
 };
+<% } %>
+<% } else { %>
+// Simple Architecture
+import { hashPassword, comparePassword, generateToken } from '../../utils/auth';
+import { ApiError } from '../../utils/ApiError';
+<% if (orm === 'mongoose') { %>
+import { User } from '../../models/User';
+<% } else if (orm === 'prisma') { %>
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+<% } else if (orm === 'sequelize') { %>
+import { User } from '../../models/User';
+<% } %>
+
+<% if (framework === 'express') { %>
+export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const data = req.body;
+    <% if (orm === 'mongoose') { %>
+    const existingUser = await User.findOne({ email: data.email });
+    <% } else if (orm === 'prisma') { %>
+    const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
+    <% } else if (orm === 'sequelize') { %>
+    const existingUser = await User.findOne({ where: { email: data.email } });
+    <% } %>
+    
+    if (existingUser) {
+      throw new ApiError(400, 'User with this email already exists');
+    }
+
+    const hashedPassword = await hashPassword(data.password);
+    <% if (orm === 'mongoose') { %>
+    const user = await User.create({ ...data, password: hashedPassword });
+    <% } else if (orm === 'prisma') { %>
+    const user = await prisma.user.create({ data: { ...data, password: hashedPassword } });
+    <% } else if (orm === 'sequelize') { %>
+    const user = await User.create({ ...data, password: hashedPassword });
+    <% } %>
+    
+    const token = generateToken({ id: user.id || (user as any)._id, email: user.email });
+    const userProfile = { id: user.id || (user as any)._id, email: user.email };
+    
+    successResponseData(res, { user: userProfile, token }, META_CODE.SUCCESS, 'User registered successfully');
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const data = req.body;
+    <% if (orm === 'mongoose') { %>
+    const user: any = await User.findOne({ email: data.email });
+    <% } else if (orm === 'prisma') { %>
+    const user: any = await prisma.user.findUnique({ where: { email: data.email } });
+    <% } else if (orm === 'sequelize') { %>
+    const user: any = await User.findOne({ where: { email: data.email } });
+    <% } %>
+    
+    if (!user) {
+      throw new ApiError(401, 'Invalid email or password');
+    }
+
+    const isValidPassword = await comparePassword(data.password, user.password);
+    if (!isValidPassword) {
+      throw new ApiError(401, 'Invalid email or password');
+    }
+
+    const token = generateToken({ id: user.id || user._id, email: user.email });
+    const userProfile = { id: user.id || user._id, email: user.email };
+    
+    successResponseData(res, { user: userProfile, token }, META_CODE.SUCCESS, 'Login successful');
+  } catch (error) {
+    next(error);
+  }
+};
+<% } else { %>
+export const register = async (ctx: Context): Promise<void> => {
+  const data: any = ctx.request.body;
+  <% if (orm === 'mongoose') { %>
+  const existingUser = await User.findOne({ email: data.email });
+  <% } else if (orm === 'prisma') { %>
+  const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
+  <% } else if (orm === 'sequelize') { %>
+  const existingUser = await User.findOne({ where: { email: data.email } });
+  <% } %>
+  
+  if (existingUser) {
+    throw new ApiError(400, 'User with this email already exists');
+  }
+
+  const hashedPassword = await hashPassword(data.password);
+  <% if (orm === 'mongoose') { %>
+  const user = await User.create({ ...data, password: hashedPassword });
+  <% } else if (orm === 'prisma') { %>
+  const user = await prisma.user.create({ data: { ...data, password: hashedPassword } });
+  <% } else if (orm === 'sequelize') { %>
+  const user = await User.create({ ...data, password: hashedPassword });
+  <% } %>
+  
+  const token = generateToken({ id: user.id || (user as any)._id, email: user.email });
+  const userProfile = { id: user.id || (user as any)._id, email: user.email };
+  
+  successResponseData(ctx, { user: userProfile, token }, META_CODE.SUCCESS, 'User registered successfully');
+};
+
+export const login = async (ctx: Context): Promise<void> => {
+  const data: any = ctx.request.body;
+  <% if (orm === 'mongoose') { %>
+  const user: any = await User.findOne({ email: data.email });
+  <% } else if (orm === 'prisma') { %>
+  const user: any = await prisma.user.findUnique({ where: { email: data.email } });
+  <% } else if (orm === 'sequelize') { %>
+  const user: any = await User.findOne({ where: { email: data.email } });
+  <% } %>
+  
+  if (!user) {
+    throw new ApiError(401, 'Invalid email or password');
+  }
+
+  const isValidPassword = await comparePassword(data.password, user.password);
+  if (!isValidPassword) {
+    throw new ApiError(401, 'Invalid email or password');
+  }
+
+  const token = generateToken({ id: user.id || user._id, email: user.email });
+  const userProfile = { id: user.id || user._id, email: user.email };
+  
+  successResponseData(ctx, { user: userProfile, token }, META_CODE.SUCCESS, 'Login successful');
+};
+<% } %>
 <% } %>
 <% } %>

@@ -12,10 +12,8 @@ export function getDependencies(config: ProjectConfig) {
     'lint-staged': '^15.2.2'
   };
 
-  if (config.structure === 'enterprise') {
-    dependencies['zod'] = '^3.22.4';
-    dependencies['winston'] = '^3.10.0';
-  }
+  dependencies['zod'] = '^3.22.4';
+  dependencies['winston'] = '^3.10.0';
 
   if (config.language === 'typescript') {
     devDependencies['typescript'] = '^5.2.2';
