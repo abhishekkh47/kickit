@@ -66,6 +66,11 @@ export async function generateProject(config: ProjectConfig) {
     await copyTemplateFiles(path.join(templatesDir, `features/redis`), targetDir, config);
   }
 
+  // 7.3 Swagger templates
+  if (config.swagger) {
+    await copyTemplateFiles(path.join(templatesDir, `features/swagger`), targetDir, config);
+  }
+
   // 7.5 Copy .env.example to .env
   if (fs.existsSync(path.join(targetDir, '.env.example'))) {
     await fs.copy(path.join(targetDir, '.env.example'), path.join(targetDir, '.env'));
@@ -106,7 +111,9 @@ async function copyTemplateFiles(source: string, target: string, config: Project
     } else {
       if (file.endsWith('.ejs')) {
         const content = await fs.readFile(srcPath, 'utf8');
-        const rendered = ejs.render(content, config);
+        let rendered = ejs.render(content, config);
+        // Clean up excessive newlines caused by EJS template tags
+        rendered = rendered.replace(/\n\s*\n\s*\n/g, '\n\n');
         await fs.writeFile(destPath, rendered);
       } else {
         await fs.copy(srcPath, destPath, { overwrite: true });

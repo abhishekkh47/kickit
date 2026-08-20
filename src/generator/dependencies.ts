@@ -111,5 +111,20 @@ export function getDependencies(config: ProjectConfig) {
     dependencies['redis'] = '^4.6.10';
   }
 
+  if (config.swagger) {
+    dependencies['swagger-jsdoc'] = '^6.2.8';
+    if (config.framework === 'express') {
+      dependencies['swagger-ui-express'] = '^5.0.0';
+    } else if (config.framework === 'koa') {
+      dependencies['koa2-swagger-ui'] = '^5.3.0';
+    }
+    if (config.language === 'typescript') {
+      devDependencies['@types/swagger-jsdoc'] = '^6.0.4';
+      if (config.framework === 'express') {
+        devDependencies['@types/swagger-ui-express'] = '^4.1.6';
+      }
+    }
+  }
+
   return { dependencies, devDependencies };
 }

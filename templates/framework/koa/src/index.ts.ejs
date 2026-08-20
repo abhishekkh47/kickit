@@ -24,6 +24,11 @@ import { redisClient } from './config/redis';
 import { env } from './config';
 <% } %>
 
+<% if (swagger) { %>
+import { koaSwagger } from 'koa2-swagger-ui';
+import { swaggerSpec } from './config/swagger';
+<% } %>
+
 dotenv.config();
 
 const app = new Koa();
@@ -51,37 +56,34 @@ app.use(helmet());
 
 // Apply the rate limiting middleware to all requests
 app.use(apiLimiter);
+<% } %>
 
-/* 
- * ========================================================
- * ADVANCED SECURITY CONFIGURATION (OPTIONAL)
- * ========================================================
- * 
- * 1. Deep XSS Sanitization
- *    npm install xss-clean
- *    // Koa requires a wrapper or custom middleware for xss-clean
- *    // Alternatively, use koa-xss-sanitizer
- *    npm install koa-xss-sanitizer
- *    import { xss } from 'koa-xss-sanitizer';
- *    app.use(xss());
- * 
- * 2. CSRF Protection
- *    npm install koa-csrf
- *    import CSRF from 'koa-csrf';
- *    app.use(new CSRF({
- *      invalidTokenMessage: 'Invalid CSRF token',
- *      invalidTokenStatusCode: 403,
- *      excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
- *      disableQuery: false
- *    }));
- * ========================================================
- */
+<% if (swagger) { %>
+// Swagger API Documentation
+app.use(
+  koaSwagger({
+    routePrefix: '/api-docs',
+    swaggerOptions: {
+      spec: swaggerSpec as any,
+    },
+  }),
+);
 <% } %>
 
 // Global Error Handler
 app.use(errorHandler);
 
 const rootRouter = new Router();
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: API Health Check
+ *     description: Returns the status of the API
+ *     responses:
+ *       200:
+ *         description: API is up and running
+ */
 rootRouter.get('/health', (ctx) => {
   ctx.status = 200;
   ctx.body = { status: 'ok', timestamp: new Date().toISOString() };

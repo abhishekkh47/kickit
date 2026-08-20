@@ -10,6 +10,7 @@ export interface ProjectConfig {
   testingFramework: 'jest' | 'mocha' | 'none';
   packageManager: 'npm' | 'yarn' | 'pnpm';
   redis: boolean;
+  swagger: boolean;
 }
 
 export const defaultOptions: Partial<ProjectConfig> = {
@@ -23,4 +24,5 @@ export const defaultOptions: Partial<ProjectConfig> = {
   testingFramework: 'jest',
   packageManager: 'npm',
   redis: false,
+  swagger: false,
 };

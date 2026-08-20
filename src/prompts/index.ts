@@ -84,6 +84,12 @@ export async function promptUser(projectNameStr?: string): Promise<ProjectConfig
       name: 'redis',
       message: 'Configure Redis cache setup?',
       default: defaultOptions.redis,
+    },
+    {
+      type: 'confirm',
+      name: 'swagger',
+      message: 'Configure Swagger API documentation?',
+      default: defaultOptions.swagger,
     }
   ]);
 
