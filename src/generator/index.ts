@@ -138,13 +138,23 @@ async function generatePackageJson(targetDir: string, config: ProjectConfig) {
       }),
       ...(config.orm === 'sequelize' ? {
         'migrate': 'sequelize-cli db:migrate',
-        'migrate:undo': 'sequelize-cli db:migrate:undo'
+        'migrate:undo': 'sequelize-cli db:migrate:undo',
+        'db:seed': 'sequelize-cli db:seed:all'
       } : {}),
       ...(config.orm === 'prisma' ? {
-        'migrate': 'prisma migrate dev'
+        'migrate': 'prisma migrate dev',
+        'db:seed': 'prisma db seed'
+      } : {}),
+      ...(config.orm === 'mongoose' ? {
+        'db:seed': config.language === 'typescript' ? 'ts-node src/scripts/seed.ts' : 'node src/scripts/seed.js'
       } : {}),
       'prepare': 'husky'
     },
+    ...(config.orm === 'prisma' ? {
+      'prisma': {
+        'seed': config.language === 'typescript' ? 'ts-node prisma/seed.ts' : 'node prisma/seed.js'
+      }
+    } : {}),
     'lint-staged': {
       'src/**/*.{js,ts}': [
         'eslint --fix'

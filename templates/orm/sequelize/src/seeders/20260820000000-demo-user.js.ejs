@@ -1,0 +1,30 @@
+'use strict';
+<% if (authentication === 'jwt') { %>
+const bcrypt = require('bcryptjs');
+<% } %>
+
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    <% if (authentication === 'jwt') { %>
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+    return queryInterface.bulkInsert('Users', [{
+      name: 'Admin User',
+      email: 'admin@example.com',
+      password: hashedPassword,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }]);
+    <% } else { %>
+    return queryInterface.bulkInsert('Users', [{
+      name: 'Admin User',
+      email: 'admin@example.com',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }]);
+    <% } %>
+  },
+
+  down: async (queryInterface, Sequelize) => {
+    return queryInterface.bulkDelete('Users', { email: 'admin@example.com' }, {});
+  }
+};

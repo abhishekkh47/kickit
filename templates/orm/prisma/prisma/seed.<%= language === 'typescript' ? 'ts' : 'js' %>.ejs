@@ -1,0 +1,45 @@
+import { PrismaClient } from '@prisma/client';
+<% if (authentication === 'jwt') { %>
+import bcrypt from 'bcryptjs';
+<% } %>
+
+const prisma = new PrismaClient();
+
+async function main() {
+  console.log('Start seeding...');
+  
+  <% if (authentication === 'jwt') { %>
+  const hashedPassword = await bcrypt.hash('admin123', 10);
+  const user = await prisma.user.upsert({
+    where: { email: 'admin@example.com' },
+    update: {},
+    create: {
+      name: 'Admin User',
+      email: 'admin@example.com',
+      password: hashedPassword,
+    },
+  });
+  <% } else { %>
+  const user = await prisma.user.upsert({
+    where: { email: 'admin@example.com' },
+    update: {},
+    create: {
+      name: 'Admin User',
+      email: 'admin@example.com',
+    },
+  });
+  <% } %>
+  
+  console.log(`Created user with id: ${user.id}`);
+  console.log('Seeding finished.');
+}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
