@@ -142,7 +142,13 @@ async function generatePackageJson(targetDir: string, config: ProjectConfig) {
       } : {}),
       ...(config.orm === 'prisma' ? {
         'migrate': 'prisma migrate dev'
-      } : {})
+      } : {}),
+      'prepare': 'husky'
+    },
+    'lint-staged': {
+      'src/**/*.{js,ts}': [
+        'eslint --fix'
+      ]
     },
     dependencies: deps.dependencies,
     devDependencies: deps.devDependencies

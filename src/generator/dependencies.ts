@@ -7,7 +7,9 @@ export function getDependencies(config: ProjectConfig) {
   };
 
   const devDependencies: Record<string, string> = {
-    'eslint': '^8.53.0'
+    'eslint': '^8.53.0',
+    'husky': '^9.0.11',
+    'lint-staged': '^15.2.2'
   };
 
   if (config.structure === 'enterprise') {
