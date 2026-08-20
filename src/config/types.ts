@@ -12,6 +12,10 @@ export interface ProjectConfig {
   redis: boolean;
   swagger: boolean;
   docker: boolean;
+  projectDescription: string;
+  authorName: string;
+  port: number;
+  databaseUrl: string;
 }
 
 export const defaultOptions: Partial<ProjectConfig> = {
@@ -27,4 +31,8 @@ export const defaultOptions: Partial<ProjectConfig> = {
   redis: false,
   swagger: false,
   docker: false,
+  projectDescription: 'A TryAppStack generated project',
+  authorName: '',
+  port: 3000,
+  databaseUrl: '',
 };

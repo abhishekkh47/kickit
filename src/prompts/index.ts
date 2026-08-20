@@ -6,9 +6,28 @@ export async function promptUser(projectNameStr?: string): Promise<ProjectConfig
     {
       type: 'input',
       name: 'projectName',
-      message: 'Project name:',
-      default: 'my-backend',
+      message: 'Project name (folder will be created):',
+      default: 'tas-boilerplate',
       when: !projectNameStr,
+    },
+    {
+      type: 'input',
+      name: 'projectDescription',
+      message: 'Project description:',
+      default: defaultOptions.projectDescription,
+    },
+    {
+      type: 'input',
+      name: 'authorName',
+      message: 'Author name:',
+      default: defaultOptions.authorName,
+    },
+    {
+      type: 'input',
+      name: 'port',
+      message: 'Application Port:',
+      default: defaultOptions.port,
+      filter: Number,
     },
     {
       type: 'list',
@@ -56,6 +75,18 @@ export async function promptUser(projectNameStr?: string): Promise<ProjectConfig
         return ['sequelize', 'prisma', 'none'];
       },
       default: (answers: any) => answers.database === 'mongodb' ? 'mongoose' : 'sequelize',
+      when: (answers) => answers.database !== 'none',
+    },
+    {
+      type: 'input',
+      name: 'databaseUrl',
+      message: 'Database URL (e.g., MongoDB Connection String):',
+      default: (answers: any) => {
+        if (answers.database === 'mongodb') return 'mongodb://localhost:27017/myapp';
+        if (answers.database === 'postgres') return 'postgresql://postgres:postgres@localhost:5432/myapp';
+        if (answers.database === 'mysql') return 'mysql://root:root@localhost:3306/myapp';
+        return '';
+      },
       when: (answers) => answers.database !== 'none',
     },
     {

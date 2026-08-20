@@ -30,7 +30,7 @@ import { swaggerSpec } from './config/swagger';
 dotenv.config();
 
 const app = express();
-const port = <% if (structure === 'enterprise') { %> env.PORT <% } else { %> process.env.PORT || 3000 <% } %>;
+const port = <% if (structure === 'enterprise') { %> env.PORT || <%= port %> <% } else { %> process.env.PORT || <%= port %> <% } %>;
 
 <% if (orm === 'mongoose' || orm === 'sequelize') { %>
 // Connect to database

@@ -47,7 +47,7 @@ COPY --from=builder /app/src ./src
 <% } %>
 
 # Expose port
-EXPOSE 3000
+EXPOSE <%= port %>
 
 # Start the application
 <% if (language === 'typescript') { %>
