@@ -14,6 +14,7 @@ export function getDependencies(config: ProjectConfig) {
 
   dependencies['zod'] = '^3.22.4';
   dependencies['winston'] = '^3.10.0';
+  dependencies['@aws-sdk/client-s3'] = '^3.400.0';
 
   if (config.language === 'typescript') {
     devDependencies['typescript'] = '^5.2.2';
@@ -26,18 +27,22 @@ export function getDependencies(config: ProjectConfig) {
 
   if (config.framework === 'express') {
     dependencies['express'] = '^4.18.2';
+    dependencies['multer'] = '^1.4.5-lts.1';
     if (config.structure === 'enterprise') {
       dependencies['express-rate-limit'] = '^7.1.0';
       dependencies['helmet'] = '^7.0.0';
     }
     if (config.language === 'typescript') {
       devDependencies['@types/express'] = '^4.17.17';
+      devDependencies['@types/multer'] = '^1.4.11';
     }
   } else if (config.framework === 'koa') {
     dependencies['koa'] = '^2.14.2';
     dependencies['koa-router'] = '^12.0.0';
     dependencies['koa-bodyparser'] = '^4.4.1';
     dependencies['@koa/cors'] = '^4.0.0';
+    dependencies['@koa/multer'] = '^3.0.2';
+    dependencies['multer'] = '^1.4.5-lts.1';
     if (config.structure === 'enterprise') {
       dependencies['koa-ratelimit'] = '^5.0.1';
       dependencies['koa-helmet'] = '^7.0.2';
@@ -47,6 +52,7 @@ export function getDependencies(config: ProjectConfig) {
       devDependencies['@types/koa-router'] = '^3.4.4';
       devDependencies['@types/koa-bodyparser'] = '^4.3.10';
       devDependencies['@types/koa__cors'] = '^4.0.0';
+      devDependencies['@types/koa__multer'] = '^2.0.7';
       if (config.structure === 'enterprise') {
         devDependencies['@types/koa-ratelimit'] = '^5.0.0';
       }

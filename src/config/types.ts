@@ -31,7 +31,7 @@ export const defaultOptions: Partial<ProjectConfig> = {
   redis: false,
   swagger: false,
   docker: false,
-  projectDescription: 'A TryAppStack generated project',
+  projectDescription: 'A BuildMyApp generated project',
   authorName: '',
   port: 3000,
   databaseUrl: '',
