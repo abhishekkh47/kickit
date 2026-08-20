@@ -90,6 +90,12 @@ export async function promptUser(projectNameStr?: string): Promise<ProjectConfig
       name: 'swagger',
       message: 'Configure Swagger API documentation?',
       default: defaultOptions.swagger,
+    },
+    {
+      type: 'confirm',
+      name: 'docker',
+      message: 'Configure Docker and Docker Compose setup?',
+      default: defaultOptions.docker,
     }
   ]);
 

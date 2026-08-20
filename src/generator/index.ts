@@ -76,6 +76,11 @@ export async function generateProject(config: ProjectConfig) {
     await copyTemplateFiles(path.join(templatesDir, `testing/${config.testingFramework}`), targetDir, config);
   }
 
+  // 8. Docker templates
+  if (config.docker) {
+    await copyTemplateFiles(path.join(templatesDir, 'features/docker'), targetDir, config);
+  }
+
   // 7.2 Redis templates
   if (config.redis) {
     await copyTemplateFiles(path.join(templatesDir, `features/redis`), targetDir, config);

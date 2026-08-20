@@ -11,6 +11,7 @@ export interface ProjectConfig {
   packageManager: 'npm' | 'yarn' | 'pnpm';
   redis: boolean;
   swagger: boolean;
+  docker: boolean;
 }
 
 export const defaultOptions: Partial<ProjectConfig> = {
@@ -25,4 +26,5 @@ export const defaultOptions: Partial<ProjectConfig> = {
   packageManager: 'npm',
   redis: false,
   swagger: false,
+  docker: false,
 };
